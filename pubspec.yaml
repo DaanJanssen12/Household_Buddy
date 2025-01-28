@@ -1,0 +1,31 @@
+name: household_buddy
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.6.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  appwrite: ^9.0.1 # Dart SDK for Appwrite
+  provider: ^6.1.2 # State management
+  lottie: ^2.3.2 # For creature animations
+  email_validator: ^2.1.17
+  file_picker: ^5.2.5
+  google_fonts: ^4.0.1
+  hexcolor: ^3.0.1
+  persistent_bottom_nav_bar: ^5.0.2
+  image_picker: ^0.8.7+5
+  intl: ^0.18.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/Images/
