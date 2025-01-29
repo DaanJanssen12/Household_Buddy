@@ -2,12 +2,11 @@
 
 import 'dart:convert';
 import 'dart:io' show File; // Import for mobile platforms
-import 'dart:html' as html; // Import for web platform
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:household_buddy/services/auth_service.dart';
 import 'package:household_buddy/services/household_service.dart';
 import 'package:appwrite/appwrite.dart';
+import 'package:household_buddy/utils/image_utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
@@ -85,31 +84,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Convert Image to Base64
-  Future<String> _convertImageToBase64(File imageFile) async {
-    try {
-      if (kIsWeb) {
-        // Web-specific image reading and Base64 conversion
-        final reader = html.FileReader();
-        final blob = html.Blob([imageFile.readAsBytesSync()]);
-        reader.readAsDataUrl(blob);
-        return await reader.onLoadEnd.first.then((_) {
-          String base64Image = reader.result.toString().split(',').last;
-          print(base64Image);
-          return base64Image;
-        });
-      } else {
-        // Mobile-specific (Android/iOS) conversion
-        List<int> imageBytes = await imageFile.readAsBytes();
-        String base64Image = base64Encode(imageBytes);
-        return base64Image;
-      }
-    } catch (e) {
-      print("Error converting image to Base64: $e");
-      return ''; // Return empty string if error occurs
-    }
-  }
-
   // Create Household
   Future<void> _createHousehold() async {
     final name = _householdNameController.text.trim();
@@ -122,7 +96,7 @@ class _HomePageState extends State<HomePage> {
       // Convert image to Base64 if an image is selected
       String? base64Image;
       if (_selectedImage != null) {
-        base64Image = await _convertImageToBase64(_selectedImage!);
+        base64Image = await convertImageToBase64(_selectedImage!);
       }
 
       await _householdService.createHousehold(
