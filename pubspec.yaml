@@ -9,22 +9,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  appwrite: ^9.0.1 # Dart SDK for Appwrite
-  provider: ^6.1.2 # State management
-  lottie: ^2.3.2 # For creature animations
-  email_validator: ^2.1.17
-  file_picker: ^5.2.5
-  google_fonts: ^4.0.1
+  permission_handler: ^11.3.1
+  appwrite: ^14.0.0
+  provider: ^6.1.2
+  lottie: ^3.3.1
+  email_validator: ^3.0.0
+  file_picker: ^8.3.0
+  google_fonts: ^6.2.1
   hexcolor: ^3.0.1
-  persistent_bottom_nav_bar: ^5.0.2
-  image_picker: ^0.8.7+5
-  intl: ^0.18.1
+  persistent_bottom_nav_bar: ^6.2.1
+  image_picker: ^1.1.2
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-  flutter_launcher_icons: ^0.9.2 
+  flutter_launcher_icons: ^0.14.3 
 
 flutter_icons:
   android: true

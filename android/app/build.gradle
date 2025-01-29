@@ -1,9 +1,10 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
+
+ext.kotlin_version = '1.6.10'  // Or another compatible version if needed
 
 android {
     namespace = "dj.householdbuddy"
@@ -23,24 +24,21 @@ android {
         applicationId = "dj.householdbuddy"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = 1
+        versionName = "1.0.0"
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            signingConfig = signingConfigs.debug
+            signingConfig signingConfigs.debug  // Use the default debug signing config
         }
-    }
-
-    // You may want to add dependencies if needed
-    dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-        implementation "dev.flutter:flutter-engine:${flutter.version}"
     }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

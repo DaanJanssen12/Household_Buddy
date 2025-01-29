@@ -12,7 +12,8 @@ class AuthService {
   }
 
   Future<Session> login(String email, String password) async {
-    return await account.createEmailSession(email: email, password: password);
+    return await account.createEmailPasswordSession(
+        email: email, password: password);
   }
 
   Future<void> logout() async {

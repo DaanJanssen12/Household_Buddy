@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:household_buddy/services/auth_service.dart';
-import 'package:provider/provider.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import 'components/login_body.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,6 +12,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkPermissions(); // Check permissions when the app starts
+  }
+
+  Future<void> _checkPermissions() async {
+    // var status = await Permission.storage.status;
+    // if (!status.isGranted) {
+    //   // If permission not granted, request it
+    //   await Permission.manageExternalStorage.request();
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authService = widget.authService;
