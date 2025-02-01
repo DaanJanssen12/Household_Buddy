@@ -51,6 +51,11 @@ class HouseholdService {
     }
   }
 
+  Future<bool> hasHousehold(String userId) async {
+    var households = await getHouseholds(userId);
+    return households.isNotEmpty;
+  }
+
   // Delete a Household
   Future<void> deleteHousehold(String documentId) async {
     try {

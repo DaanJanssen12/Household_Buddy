@@ -5,8 +5,10 @@ import 'package:hexcolor/hexcolor.dart';
 class MyButton extends StatelessWidget {
   final Function()? onPressed;
   final String buttonText;
+  final Widget? isLoadingWidget;
+  final bool? isLoadingState;
   const MyButton(
-      {super.key, required this.onPressed, required this.buttonText});
+      {super.key, required this.onPressed, required this.buttonText, this.isLoadingWidget, this.isLoadingState});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,9 @@ class MyButton extends StatelessWidget {
             color: HexColor('#44564a'),
             borderRadius: BorderRadius.circular(30),
           ),
-          child: Text(
+          child: isLoadingState != null && isLoadingState == true
+           ? isLoadingWidget
+           : Text(
             buttonText,
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(

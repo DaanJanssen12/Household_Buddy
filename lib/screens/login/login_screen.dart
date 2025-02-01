@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:household_buddy/services/auth_service.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:household_buddy/services/household_service.dart';
 import 'components/login_body.dart';
 
 class LoginScreen extends StatefulWidget {
   final AuthService authService;
-  const LoginScreen(this.authService, {super.key});
+  final HouseholdService householdService;
 
+  const LoginScreen({
+    Key? key,
+    required this.authService,
+    required this.householdService,
+  }) : super(key: key);
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -29,11 +34,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authService = widget.authService;
+    final householdService = widget.householdService;
 
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: LoginBodyScreen(authService: authService),
+          child: LoginBodyScreen(authService: authService, householdService: householdService),
         ),
       ),
     );

@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
   final Client client; // Pass the Appwrite Client
-  const HomePage({Key? key, required this.client}) : super(key: key);
+  const HomePage({super.key, required this.client});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -109,17 +109,21 @@ class _HomePageState extends State<HomePage> {
         _selectedImage = null; // Reset image selection
       });
       _fetchHouseholds(); // Refresh households
-      Navigator.pop(context); // Close the bottom sheet
+      Navigator.pop(getContext()); // Close the bottom sheet
     } catch (e) {
       print('Error creating household: $e');
     }
+  }
+
+  BuildContext getContext() {
+    return context;
   }
 
   // Sign Out
   Future<void> _signOut() async {
     try {
       await _authService?.logout();
-      Navigator.of(context)
+      Navigator.of(getContext())
           .pushReplacementNamed('/login'); // Navigate back to login
     } catch (e) {
       print('Error signing out: $e');

@@ -1,17 +1,21 @@
+import 'package:appwrite/appwrite.dart';
+import 'package:appwrite/models.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:household_buddy/components/my_button.dart';
 import 'package:household_buddy/components/my_textfield.dart';
-import 'package:household_buddy/screens/login/login_screen.dart';
 import 'package:household_buddy/services/auth_service.dart';
+import 'package:household_buddy/services/household_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginBodyScreen extends StatefulWidget {
   final AuthService authService;
+  final HouseholdService householdService;
 
   // Constructor with required parameters
-  const LoginBodyScreen({super.key, required this.authService});
+  const LoginBodyScreen({super.key, required this.authService, required this.householdService});
 
   @override
   State<LoginBodyScreen> createState() => _LoginBodyScreenState();
@@ -20,19 +24,45 @@ class LoginBodyScreen extends StatefulWidget {
 class _LoginBodyScreenState extends State<LoginBodyScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isLoading = false;
 
   void login() async {
+    setState(() {
+      isLoading = true;
+    });
     try {
       validateEmail(emailController.text);
-      await widget.authService.login(
+      final session = await widget.authService.login(
         emailController.text,
         passwordController.text,
       );
-      // Navigate to home screen
-      Navigator.pushReplacementNamed(context, '/home');
+      if (session != null) {
+        await handleLoginSuccess(session);
+      }
     } catch (e) {
-      print('Login error: $e');
+      handleLoginFailure(e as Exception);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
+  }
+
+  Future<void> handleLoginSuccess(Session session) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("sessionToken", session.$id);
+    
+    var user = await widget.authService.getUser();
+    final bool hasHousehold = await widget.householdService.hasHousehold(user.$id);
+    if(hasHousehold){
+          Navigator.pushReplacementNamed(context, '/home');
+    }else{
+          Navigator.pushReplacementNamed(context, '/introduction');
+    }
+  }
+
+  void handleLoginFailure(Exception e) {
+    showErrorMessage('Login failed. Please check your credentials.');
   }
 
   void showErrorMessage(String message) {
@@ -169,8 +199,17 @@ class _LoginBodyScreenState extends State<LoginBodyScreen> {
                               height: 20,
                             ),
                             MyButton(
-                              onPressed: login,
-                              buttonText: 'Submit',
+                              onPressed: isLoading ? null : login,
+                              buttonText: 'Login',
+                              isLoadingState: isLoading,
+                              isLoadingWidget: SizedBox(
+                                width: 5,
+                                height: 5,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 1,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                             const SizedBox(
                               height: 12,
