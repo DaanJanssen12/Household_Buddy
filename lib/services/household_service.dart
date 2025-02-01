@@ -12,7 +12,7 @@ class HouseholdService {
 
   // Create a Household
   Future<void> createHousehold(
-      String userId, String householdName, String? imageBase64) async {
+      String userId, String householdName, int buddyId, String buddyName) async {
     try {
       await databases.createDocument(
           databaseId: databaseId,
@@ -22,7 +22,8 @@ class HouseholdService {
             'userId': userId,
             'householdName': householdName,
             'createdAt': DateTime.now().toIso8601String(),
-            'imageBase64': imageBase64
+            'buddyId': buddyId,
+            'buddyName': buddyName
           },
           permissions: [
             Permission.read(Role.user(userId)),

@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginScreen(authService: authService, householdService: householdService),
         '/home': (context) => HomePage(client: client),
         '/introduction': (context) => IntroductionScreen(client: client),
-        'buddy-selection': (context) => BuddySelectionScreen(householdName: '')
+        'buddy-selection': (context) => BuddySelectionScreen(householdName: '', householdService: householdService, authService: authService)
       },
     );
   }

@@ -32,18 +32,18 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       final user = await _authService.getUser();
 
       try {
-        // Create the household with the entered name
-        await _householdService.createHousehold(user.$id, householdName, null);
-
         // Navigate to the BuddySelectionScreen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => BuddySelectionScreen(householdName: householdName),
+            builder: (context) => BuddySelectionScreen(householdName: householdName, householdService: _householdService, authService: _authService),
           ),
         );
       } catch (e) {
         print("Failed to create household: $e");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Something went wrong. Please try again.")),
+        );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
