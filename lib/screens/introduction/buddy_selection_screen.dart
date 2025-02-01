@@ -89,6 +89,7 @@ class _BuddySelectionScreenState extends State<BuddySelectionScreen> {
             // Buddy Image
             SizedBox(
               height: 200,
+              width: MediaQuery.of(context).size.width * 0.8,
               child: Stack(
                 alignment: Alignment.center,
                 children: [

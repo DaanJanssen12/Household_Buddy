@@ -21,6 +21,10 @@ class BottomNavBar extends StatelessWidget {
           label: 'Home',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.task),
+          label: 'Tasks',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.settings),
           label: 'Settings',
         ),

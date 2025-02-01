@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:household_buddy/services/household_service.dart';
+import 'package:household_buddy/notifiers/theme_notifier.dart';
 import 'package:household_buddy/services/auth_service.dart';
+import 'package:household_buddy/services/household_service.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   final AuthService authService;
@@ -20,25 +22,22 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   late bool _isDarkMode;
-  late Map<String, dynamic> _householdData;
+  late Map<String, dynamic>? _householdData;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the theme setting
-    _isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    _householdData = widget.householdData ?? new Map<String, dynamic>();
+    _householdData = widget.householdData;
   }
 
   // Toggle Dark Mode
   void _toggleDarkMode(bool value) {
+    // Update theme state globally using ThemeNotifier
+    final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
+    themeNotifier.toggleTheme();
     setState(() {
       _isDarkMode = value;
     });
-    // You can update the app's theme mode globally here if you are using a theme manager
-    final newThemeMode = value ? ThemeMode.dark : ThemeMode.light;
-    // This is where you'd update the theme using a ThemeProvider or similar method
-    // Example: Provider.of<ThemeProvider>(context, listen: false).setTheme(newThemeMode);
   }
 
   // Show delete confirmation dialog
@@ -48,7 +47,8 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Are you sure?'),
-          content: const Text('Do you really want to delete this household? This action cannot be undone.'),
+          content: const Text(
+              'Do you really want to delete this household? This action cannot be undone. You will be logged out after this action.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -58,16 +58,23 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop();
-                // Call the service to delete the household
+                Navigator.of(context).pop(); // Close the dialog
+
                 try {
-                  await widget.householdService.deleteHousehold(_householdData['id']);
-                  // Provide feedback and navigate back
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Household deleted')));
-                  Navigator.of(context).pop(); // Or navigate to a different page
+                  // Delete the household
+                  await widget.householdService
+                      .deleteHousehold(_householdData?['id']);
+                  // Log the user out
+                  await widget.authService.logout();
+
+                  // Ensure the widget is still mounted before navigating
+                  if (mounted) {
+                    // Pop all screens and navigate to login screen
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                    Navigator.pushReplacementNamed(context, '/login');
+                  }
                 } catch (e) {
                   print('Error deleting household: $e');
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error deleting household')));
                 }
               },
               child: const Text('Delete'),
@@ -80,6 +87,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize theme mode directly in the build method to avoid flickering
+    _isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: Padding(

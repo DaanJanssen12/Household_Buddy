@@ -1,7 +1,9 @@
 import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:household_buddy/components/bottom_nav_bar.dart';
+import 'package:household_buddy/components/top_bar.dart';
 import 'package:household_buddy/screens/pages/household_page.dart';
+import 'package:household_buddy/screens/pages/household_tasks_page.dart';
 import 'package:household_buddy/screens/pages/settings_page.dart';
 import 'package:household_buddy/services/auth_service.dart';
 import 'package:household_buddy/services/household_service.dart';
@@ -43,13 +45,21 @@ class _HomePageState extends State<HomePage> {
       if (households.isNotEmpty) {
         setState(() {
           _household = households.first.data;
+          _household?.putIfAbsent('id', () => households.first.$id);
           _pages = [
             // Pass the household data directly to HouseholdPage
             HouseholdPage(household: _household),
-            SettingsPage(authService: _authService, householdService: _householdService, householdData: _household),
+            HouseholdTasksPage(),
+            SettingsPage(
+                authService: _authService,
+                householdService: _householdService,
+                householdData: _household),
             // Add more pages as necessary
           ];
         });
+      } else {
+        Navigator.of(context).pushReplacementNamed(
+            '/introduction'); // Or navigate to a different page
       }
     } catch (e) {
       print('Error fetching household: $e');
@@ -88,15 +98,16 @@ class _HomePageState extends State<HomePage> {
     final householdName = _household!['householdName'];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('$householdName'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _signOut,
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   title: Text('$householdName'),
+      //   actions: [
+      //     IconButton(
+      //       icon: const Icon(Icons.logout),
+      //       onPressed: _signOut,
+      //     ),
+      //   ],
+      // ),
+      appBar: TopBar(householdName: householdName),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavBar(
         currentIndex: _selectedIndex,
