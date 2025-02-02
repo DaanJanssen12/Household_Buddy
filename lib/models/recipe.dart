@@ -4,12 +4,12 @@ class Recipe {
   final String name;
   final String description;
   final List<FoodItem> ingredients;
-  final List<String>? tags;
+  final List<String> tags;
 
   Recipe({
     required this.name,
     required this.description,
     required this.ingredients,
-    this.tags,
+    this.tags = const [],
   });
 }
