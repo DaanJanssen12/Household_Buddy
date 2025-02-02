@@ -15,18 +15,23 @@ class BottomNavBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index) => onItemTapped(index),
+      type: BottomNavigationBarType.fixed,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          label: 'Home',
+          label: '',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.task),
-          label: 'Tasks',
+          label: '',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.shopping_cart),
+          label: '',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.settings),
-          label: 'Settings',
+          label: '',
         ),
         // You can add more items here for other pages
       ],

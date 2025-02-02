@@ -92,7 +92,10 @@ class _HouseholdTasksPageState extends State<HouseholdTasksPage>
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Add New Task"),
+          title: Text("Add New Task",
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  )), // Uses headlineLarge text style from the theme
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -153,7 +156,10 @@ class _HouseholdTasksPageState extends State<HouseholdTasksPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Household Tasks"),
+        title: Text("Household Tasks",
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                )), // Uses headlineLarge text style from the theme
       ),
       body: Column(
         children: [
@@ -165,7 +171,9 @@ class _HouseholdTasksPageState extends State<HouseholdTasksPage>
                 SizedBox(height: 10),
                 Text("You're doing great! Keep it up!",
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            )),
               ],
             ),
           ),

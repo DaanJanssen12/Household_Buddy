@@ -8,6 +8,7 @@ import 'package:household_buddy/screens/introduction/introduction_screen.dart';
 import 'package:household_buddy/screens/login/login_screen.dart';
 import 'package:household_buddy/services/auth_service.dart';
 import 'package:household_buddy/services/household_service.dart';
+import 'package:household_buddy/themes/app_theme.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -56,8 +57,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Household Buddy',
         themeMode: themeNotifier.themeMode,
-        theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
         home: FutureBuilder<bool>(
           future: authService.checkIfLoggedIn(),
           builder: (context, snapshot) {

@@ -2,6 +2,7 @@ import 'package:appwrite/appwrite.dart';
 import 'package:flutter/material.dart';
 import 'package:household_buddy/components/bottom_nav_bar.dart';
 import 'package:household_buddy/components/top_bar.dart';
+import 'package:household_buddy/screens/pages/groceries_page.dart';
 import 'package:household_buddy/screens/pages/household_page.dart';
 import 'package:household_buddy/screens/pages/household_tasks_page.dart';
 import 'package:household_buddy/screens/pages/settings_page.dart';
@@ -57,6 +58,7 @@ class _HomePageState extends State<HomePage> {
               taskService: _taskService,
               householdId: _household?['id'],
             ),
+            GroceriesPage(),
             SettingsPage(
                 authService: _authService,
                 householdService: _householdService,
@@ -95,7 +97,12 @@ class _HomePageState extends State<HomePage> {
     if (_household == null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Loading...'),
+          title: Text(
+            'Loading...',
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ), // Uses headlineLarge text style from the theme
+          ),
         ),
         body: const Center(child: CircularProgressIndicator()),
       );
@@ -105,15 +112,6 @@ class _HomePageState extends State<HomePage> {
     final householdName = _household!['householdName'];
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('$householdName'),
-      //   actions: [
-      //     IconButton(
-      //       icon: const Icon(Icons.logout),
-      //       onPressed: _signOut,
-      //     ),
-      //   ],
-      // ),
       appBar: TopBar(householdName: householdName),
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavBar(
