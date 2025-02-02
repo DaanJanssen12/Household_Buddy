@@ -11,8 +11,8 @@ class HouseholdService {
   final String collectionId = '67991d61001125bffba4';
 
   // Create a Household
-  Future<void> createHousehold(
-      String userId, String householdName, int buddyId, String buddyName) async {
+  Future<void> createHousehold(String userId, String householdName, int buddyId,
+      String buddyName) async {
     try {
       await databases.createDocument(
           databaseId: databaseId,
@@ -23,7 +23,8 @@ class HouseholdService {
             'householdName': householdName,
             'createdAt': DateTime.now().toIso8601String(),
             'buddyId': buddyId,
-            'buddyName': buddyName
+            'buddyName': buddyName,
+            'gold': 0
           },
           permissions: [
             Permission.read(Role.user(userId)),
@@ -55,6 +56,14 @@ class HouseholdService {
   Future<bool> hasHousehold(String userId) async {
     var households = await getHouseholds(userId);
     return households.isNotEmpty;
+  }
+
+  Future<void> setGold(String householdId, int gold) async {
+    await databases.updateDocument(
+        databaseId: databaseId,
+        collectionId: collectionId,
+        documentId: householdId,
+        data: {'gold': gold});
   }
 
   // Delete a Household

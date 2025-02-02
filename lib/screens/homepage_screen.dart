@@ -7,6 +7,7 @@ import 'package:household_buddy/screens/pages/household_tasks_page.dart';
 import 'package:household_buddy/screens/pages/settings_page.dart';
 import 'package:household_buddy/services/auth_service.dart';
 import 'package:household_buddy/services/household_service.dart';
+import 'package:household_buddy/services/task_service.dart';
 
 class HomePage extends StatefulWidget {
   final Client client; // Pass the Appwrite Client
@@ -19,6 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late AuthService _authService;
   late HouseholdService _householdService;
+  late TaskService _taskService;
   Map<String, dynamic>? _household;
   int _selectedIndex = 0;
 
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _authService = AuthService(widget.client);
     _householdService = HouseholdService(widget.client);
+    _taskService = TaskService(widget.client);
     _fetchHousehold();
   }
 
@@ -49,7 +52,11 @@ class _HomePageState extends State<HomePage> {
           _pages = [
             // Pass the household data directly to HouseholdPage
             HouseholdPage(household: _household),
-            HouseholdTasksPage(),
+            HouseholdTasksPage(
+              authService: _authService,
+              taskService: _taskService,
+              householdId: _household?['id'],
+            ),
             SettingsPage(
                 authService: _authService,
                 householdService: _householdService,

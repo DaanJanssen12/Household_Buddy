@@ -24,7 +24,7 @@ void main() async {
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
-        ChangeNotifierProvider(create: (context) => GoldProvider()),
+        ChangeNotifierProvider(create: (context) => GoldProvider(authService: authService, householdService: householdService)),
       ],
       child: MyApp(
           client: client,
