@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-
-class GroceryItem {
-  String name;
-  String quantity; // For variable quantities (e.g., "500g", "3 sachets")
-  
-  GroceryItem({required this.name, required this.quantity});
-}
+import 'package:household_buddy/models/food_item.dart';
+import 'package:household_buddy/models/recipe.dart';
+import 'package:household_buddy/screens/pages/recipe/recipe_tab.dart';
 
 class GroceriesPage extends StatefulWidget {
   @override
@@ -14,7 +10,7 @@ class GroceriesPage extends StatefulWidget {
 
 class _GroceriesPageState extends State<GroceriesPage> with SingleTickerProviderStateMixin {
   List<String> shoppingList = [];
-  List<GroceryItem> pantryList = [];
+  List<FoodItem> pantryList = [];
   TextEditingController itemController = TextEditingController();
   TextEditingController quantityController = TextEditingController();
 
@@ -24,8 +20,8 @@ class _GroceriesPageState extends State<GroceriesPage> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    // Initialize TabController with 2 tabs
-    _tabController = TabController(length: 2, vsync: this);
+    // Initialize TabController with 3 tabs
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   void _addItemToShoppingList() {
@@ -38,7 +34,6 @@ class _GroceriesPageState extends State<GroceriesPage> with SingleTickerProvider
   }
 
   void _moveToPantry(int index) {
-    // Prompt for quantity input when moving to the pantry
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -53,7 +48,7 @@ class _GroceriesPageState extends State<GroceriesPage> with SingleTickerProvider
               onPressed: () {
                 if (quantityController.text.isNotEmpty) {
                   setState(() {
-                    pantryList.add(GroceryItem(name: shoppingList[index], quantity: quantityController.text));
+                    pantryList.add(FoodItem(name: shoppingList[index], quantity: quantityController.text));
                     shoppingList.removeAt(index);
                     quantityController.clear();
                   });
@@ -101,13 +96,12 @@ class _GroceriesPageState extends State<GroceriesPage> with SingleTickerProvider
   void _addAllToPantry() {
     setState(() {
       for (var item in shoppingList) {
-        pantryList.add(GroceryItem(name: item, quantity: "1 unit"));
+        pantryList.add(FoodItem(name: item, quantity: "1 unit"));
       }
       shoppingList.clear();
     });
   }
 
-  // Function to add items directly to the pantry
   void _addItemToPantry() {
     if (itemController.text.isNotEmpty) {
       showDialog(
@@ -124,7 +118,7 @@ class _GroceriesPageState extends State<GroceriesPage> with SingleTickerProvider
                 onPressed: () {
                   if (quantityController.text.isNotEmpty) {
                     setState(() {
-                      pantryList.add(GroceryItem(name: itemController.text, quantity: quantityController.text));
+                      pantryList.add(FoodItem(name: itemController.text, quantity: quantityController.text));
                       itemController.clear();
                       quantityController.clear();
                     });
@@ -156,113 +150,139 @@ class _GroceriesPageState extends State<GroceriesPage> with SingleTickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Groceries"),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(text: "Shopping List"),
-            Tab(text: "Pantry"),
-          ],
-        ),
+        title: Text("Groceries",
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                )), 
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          // Shopping List Tab
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: itemController,
-                        decoration: InputDecoration(hintText: "Add a grocery item"),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.add, color: Colors.blue),
-                      onPressed: _addItemToShoppingList,
-                    ),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: _addAllToPantry,
-                child: Text("Move All to Pantry"),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: shoppingList.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-                      child: ListTile(
-                        title: Text(shoppingList[index]),
-                        trailing: IconButton(
-                          icon: Icon(Icons.check, color: Colors.green),
-                          onPressed: () => _moveToPantry(index),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Image.asset("assets/Images/buddy1.png", height: 100),
+                SizedBox(height: 10),
+                Text("You're doing great! Keep it up!",
+                    style:
+                        Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            )),
+              ],
+            ),
+          ),
+          TabBar(
+            controller: _tabController,
+            tabs: [
+              Tab(text: "Shopping List"),
+              Tab(text: "Pantry"),
+              Tab(text: "Recipes"), // Add new tab for Recipes
             ],
           ),
-          // Pantry Tab
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // Shopping List Tab
+                Column(
                   children: [
-                    Expanded(
-                      child: TextField(
-                        controller: itemController,
-                        decoration: InputDecoration(hintText: "Add directly to pantry"),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: itemController,
+                              decoration: InputDecoration(hintText: "Add a grocery item"),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.add, color: Colors.blue),
+                            onPressed: _addItemToShoppingList,
+                          ),
+                        ],
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.add, color: Colors.blue),
-                      onPressed: _addItemToPantry,
+                    ElevatedButton(
+                      onPressed: _addAllToPantry,
+                      child: Text("Move All to Pantry"),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: shoppingList.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                            child: ListTile(
+                              title: Text(shoppingList[index]),
+                              trailing: IconButton(
+                                icon: Icon(Icons.check, color: Colors.green),
+                                onPressed: () => _moveToPantry(index),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: pantryList.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
-                      child: ListTile(
-                        title: Text(pantryList[index].name),
-                        subtitle: Text("Quantity: ${pantryList[index].quantity}"),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.remove, color: Colors.red),
-                              onPressed: () => _decreaseQuantity(index),
+                // Pantry Tab
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: itemController,
+                              decoration: InputDecoration(hintText: "Add directly to pantry"),
                             ),
-                            IconButton(
-                              icon: Icon(Icons.add, color: Colors.green),
-                              onPressed: () => _increaseQuantity(index),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () => _removeFromPantry(index),
-                            ),
-                          ],
-                        ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.add, color: Colors.blue),
+                            onPressed: _addItemToPantry,
+                          ),
+                        ],
                       ),
-                    );
-                  },
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: pantryList.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                            child: ListTile(
+                              title: Text(pantryList[index].name),
+                              subtitle: Text("Quantity: ${pantryList[index].quantity}"),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.remove, color: Colors.red),
+                                    onPressed: () => _decreaseQuantity(index),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.add, color: Colors.green),
+                                    onPressed: () => _increaseQuantity(index),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () => _removeFromPantry(index),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                // Recipes Tab
+                RecipesPage(), // Use the RecipeTab widget here
+              ],
+            ),
           ),
         ],
       ),

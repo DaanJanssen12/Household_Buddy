@@ -23,7 +23,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Icon(
                 Icons.monetization_on,
-                color: Theme.of(context).iconTheme.color, // Uses icon color from the theme
+                color: Color(0xFFFFD700), // Uses icon color from the theme
                 size: 28,
               ),
               const SizedBox(width: 5),

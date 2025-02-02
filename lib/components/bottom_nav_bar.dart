@@ -26,7 +26,7 @@ class BottomNavBar extends StatelessWidget {
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart),
+          icon: Icon(Icons.food_bank),
           label: '',
         ),
         BottomNavigationBarItem(

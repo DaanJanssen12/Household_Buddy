@@ -211,13 +211,12 @@ class _HouseholdTasksPageState extends State<HouseholdTasksPage>
                           children: [
                             if (!task.isCompleted)
                               IconButton(
-                                icon: Icon(Icons.check_circle,
-                                    color: Colors.green),
+                                icon: Icon(Icons.check_circle),
                                 onPressed: () =>
                                     _completeTask(tasks.indexOf(task)),
                               ),
                             IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
+                              icon: Icon(Icons.delete),
                               onPressed: () => _removeTask(tasks.indexOf(task)),
                             ),
                           ],
